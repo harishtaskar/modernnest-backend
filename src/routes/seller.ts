@@ -12,7 +12,6 @@ const sellerExistsEmail = async (input: string) => {
   await ConnectDB();
   let userExists = false;
   const email = await Seller.findOne({ "business.email": input });
-  console.log("---email" + email);
   if (email !== null) {
     userExists = true;
   }
@@ -24,7 +23,6 @@ const sellerExistsMobile = async (input: string) => {
   await ConnectDB();
   let userExists = false;
   const mobile = await Seller.findOne({ "business.contact": input });
-  console.log("---mobile" + mobile);
   if (mobile !== null) {
     userExists = true;
   }
@@ -69,13 +67,13 @@ sellerRoute.post("/signup", async (req, res) => {
   }
 });
 
-//login existing Seller
+//login Seller
 sellerRoute.get("/signin", async (req, res) => {
   try {
     const email = req.headers.email;
     const password = req.headers.password;
     await ConnectDB();
-    const user = await Seller.findOne({ email: email });
+    const user = await Seller.findOne({ "business.email": email });
     if (user && user.password === password) {
       const token = jwt.sign(
         { email: user.email, status: "seller" },
@@ -85,6 +83,7 @@ sellerRoute.get("/signin", async (req, res) => {
         res: "ok",
         msg: " 🚀 Login Successfull",
         token: `Bearer ${token}`,
+        user: user,
       });
     } else {
       res.status(200).json({

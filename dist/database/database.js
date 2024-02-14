@@ -17,13 +17,11 @@ const mongoose_1 = __importDefault(require("mongoose"));
 let connected = false;
 const ConnectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const uri = process.env.MONGODB_URL;
-    console.log(uri);
     if (connected) {
         console.log("Database Connected");
     }
     try {
         if (uri) {
-            console.log(uri);
             yield mongoose_1.default.connect(uri, {
                 dbName: "modernnest",
             });

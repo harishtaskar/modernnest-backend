@@ -25,7 +25,6 @@ const userExistsEmail = (input) => __awaiter(void 0, void 0, void 0, function* (
     let userExists = false;
     const email = yield users_1.default.findOne({ email: input });
     if (email !== null) {
-        console.log("user is" + email);
         userExists = true;
     }
     return userExists;
@@ -36,7 +35,6 @@ const userExistsMobile = (input) => __awaiter(void 0, void 0, void 0, function* 
     let userExists = false;
     const mobile = yield users_1.default.findOne({ mobile: input });
     if (mobile !== null) {
-        console.log("user is" + mobile);
         userExists = true;
     }
     return userExists;
@@ -44,7 +42,6 @@ const userExistsMobile = (input) => __awaiter(void 0, void 0, void 0, function* 
 // Register new user
 userRoute.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.body.user;
-    console.log(user);
     if (yield userExistsEmail(user.email)) {
         res.status(411).json({
             res: "ERROR",
@@ -83,7 +80,7 @@ userRoute.get("/signin", (req, res) => __awaiter(void 0, void 0, void 0, functio
         yield (0, database_1.ConnectDB)();
         const user = yield users_1.default.findOne({ email: email });
         if (user && user.password === password) {
-            const token = jsonwebtoken_1.default.sign(user.email, config_1.jwtpassword);
+            const token = jsonwebtoken_1.default.sign({ email: user.email, status: "user" }, config_1.jwtpassword);
             res.status(200).json({
                 res: "ok",
                 msg: " 🚀 Login Successfull",
@@ -106,8 +103,8 @@ userRoute.get("/signin", (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 // existing user details
 userRoute.get("/", authentication_1.userAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const email = req.email;
     try {
+        const email = req.email;
         yield (0, database_1.ConnectDB)();
         const user = yield users_1.default.findOne({ email: email });
         if (user !== null) {

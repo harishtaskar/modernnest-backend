@@ -5,8 +5,6 @@ export const userAuthentication = (req: any, res: any, next: any) => {
   try {
     const auth = req.headers.authorization;
     const token = auth.split(" ")[1];
-    console.log(auth);
-    console.log(token);
 
     try {
       if (token) {
@@ -44,8 +42,6 @@ export const sellerAuthentication = (req: any, res: any, next: any) => {
   try {
     const auth = req.headers.authorization;
     const token = auth.split(" ")[1];
-    console.log(auth);
-    console.log(token);
 
     try {
       if (token) {

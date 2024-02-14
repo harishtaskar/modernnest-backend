@@ -13,7 +13,6 @@ const userExistsEmail = async (input: string) => {
   let userExists = false;
   const email = await Users.findOne({ email: input });
   if (email !== null) {
-    console.log("user is" + email);
     userExists = true;
   }
   return userExists;
@@ -25,7 +24,6 @@ const userExistsMobile = async (input: string) => {
   let userExists = false;
   const mobile = await Users.findOne({ mobile: input });
   if (mobile !== null) {
-    console.log("user is" + mobile);
     userExists = true;
   }
   return userExists;
@@ -34,7 +32,6 @@ const userExistsMobile = async (input: string) => {
 // Register new user
 userRoute.post("/signin", async (req, res) => {
   const user = req.body.user;
-  console.log(user);
 
   if (await userExistsEmail(user.email)) {
     res.status(411).json({
