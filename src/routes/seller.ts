@@ -75,10 +75,7 @@ sellerRoute.get("/signin", async (req, res) => {
     await ConnectDB();
     const user = await Seller.findOne({ "business.email": email });
     if (user && user.password === password) {
-      const token = jwt.sign(
-        { email: user.email, status: "seller" },
-        jwtpassword
-      );
+      const token = jwt.sign({ email: email, status: "seller" }, jwtpassword);
       res.status(200).json({
         res: "ok",
         msg: " 🚀 Login Successfull",
@@ -104,7 +101,7 @@ sellerRoute.get("/", sellerAuthentication, async (req: any, res) => {
   try {
     const email = req.email;
     await ConnectDB();
-    const user = await Seller.findOne({ email: email });
+    const user = await Seller.findOne({ "business.email": email });
     if (user !== null) {
       res.status(200).json({
         res: "ok",
@@ -124,4 +121,58 @@ sellerRoute.get("/", sellerAuthentication, async (req: any, res) => {
     });
   }
 });
+
+sellerRoute.patch("/update", sellerAuthentication, async (req: any, res) => {
+  try {
+    const update = req.body.update;
+    const email = req.email;
+    try {
+      await ConnectDB();
+      console.log(email);
+      const newUpdate = await Seller.findOneAndUpdate(
+        { "business.email": email },
+        update
+      );
+      res.status(200).json({
+        res: "ok",
+        update: newUpdate,
+      });
+    } catch (error) {
+      res.status(411).json({
+        res: "Error",
+        msg: "Error While Updating Seller Profile",
+      });
+    }
+  } catch (error) {
+    res.status(411).json({
+      res: "Error",
+      msg: "Invalid Input Types",
+      type: {
+        update: {
+          "business.email": "Something",
+        },
+      },
+      error: error,
+    });
+  }
+});
+
+sellerRoute.delete("/delete", sellerAuthentication, async (req: any, res) => {
+  try {
+    const email = req.email;
+    await ConnectDB();
+    await Seller.findOneAndDelete({ "business.email": email });
+    res.status(411).json({
+      res: "ok",
+      msg: "Profile Deleted Successfully",
+    });
+  } catch (error) {
+    res.status(411).json({
+      res: "Error",
+      msg: "Invalid Input Types",
+      error: error,
+    });
+  }
+});
+
 export default sellerRoute;

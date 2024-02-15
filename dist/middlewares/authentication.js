@@ -53,6 +53,7 @@ const sellerAuthentication = (req, res, next) => {
         try {
             if (token) {
                 const verify = jsonwebtoken_1.default.verify(token, config_1.jwtpassword);
+                console.log(verify);
                 if (verify.status === "seller") {
                     req.email = verify.email;
                     next();

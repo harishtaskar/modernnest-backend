@@ -88,7 +88,7 @@ sellerRoute.get("/signin", (req, res) => __awaiter(void 0, void 0, void 0, funct
         yield (0, database_1.ConnectDB)();
         const user = yield sellers_1.default.findOne({ "business.email": email });
         if (user && user.password === password) {
-            const token = jsonwebtoken_1.default.sign({ email: user.email, status: "seller" }, config_1.jwtpassword);
+            const token = jsonwebtoken_1.default.sign({ email: email, status: "seller" }, config_1.jwtpassword);
             res.status(200).json({
                 res: "ok",
                 msg: " 🚀 Login Successfull",
@@ -115,7 +115,7 @@ sellerRoute.get("/", authentication_1.sellerAuthentication, (req, res) => __awai
     try {
         const email = req.email;
         yield (0, database_1.ConnectDB)();
-        const user = yield sellers_1.default.findOne({ email: email });
+        const user = yield sellers_1.default.findOne({ "business.email": email });
         if (user !== null) {
             res.status(200).json({
                 res: "ok",
@@ -134,6 +134,57 @@ sellerRoute.get("/", authentication_1.sellerAuthentication, (req, res) => __awai
         res.status(411).json({
             res: "Error",
             msg: "Error fetching seller details",
+        });
+    }
+}));
+sellerRoute.patch("/update", authentication_1.sellerAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const update = req.body.update;
+        const email = req.email;
+        try {
+            yield (0, database_1.ConnectDB)();
+            console.log(email);
+            const newUpdate = yield sellers_1.default.findOneAndUpdate({ "business.email": email }, update);
+            res.status(200).json({
+                res: "ok",
+                update: newUpdate,
+            });
+        }
+        catch (error) {
+            res.status(411).json({
+                res: "Error",
+                msg: "Invalid Input Types",
+            });
+        }
+    }
+    catch (error) {
+        res.status(411).json({
+            res: "Error",
+            msg: "Invalid Input Types",
+            type: {
+                update: {
+                    "business.email": "Something",
+                },
+            },
+            error: error,
+        });
+    }
+}));
+sellerRoute.delete("/delete", authentication_1.sellerAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const email = req.email;
+        yield (0, database_1.ConnectDB)();
+        yield sellers_1.default.findOneAndDelete({ "business.email": email });
+        res.status(411).json({
+            res: "ok",
+            msg: "Profile Deleted Successfully",
+        });
+    }
+    catch (error) {
+        res.status(411).json({
+            res: "Error",
+            msg: "Invalid Input Types",
+            error: error,
         });
     }
 }));

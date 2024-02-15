@@ -46,6 +46,7 @@ export const sellerAuthentication = (req: any, res: any, next: any) => {
     try {
       if (token) {
         const verify: any = jwt.verify(token, jwtpassword);
+        console.log(verify);
         if (verify.status === "seller") {
           req.email = verify.email;
           next();

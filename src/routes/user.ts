@@ -118,4 +118,54 @@ userRoute.get("/", userAuthentication, async (req: any, res) => {
   }
 });
 
+userRoute.patch("/update", userAuthentication, async (req: any, res) => {
+  try {
+    const update = req.body.update;
+    const email = req.email;
+    try {
+      await ConnectDB();
+      console.log(email);
+      const newUpdate = await Users.findOneAndUpdate({ email: email }, update);
+      res.status(200).json({
+        res: "ok",
+        update: newUpdate,
+      });
+    } catch (error) {
+      res.status(411).json({
+        res: "Error",
+        msg: "Error While Updating User Profile",
+      });
+    }
+  } catch (error) {
+    res.status(411).json({
+      res: "Error",
+      msg: "Invalid Input Types",
+      type: {
+        update: {
+          field: "value",
+        },
+      },
+      error: error,
+    });
+  }
+});
+
+userRoute.delete("/delete", userAuthentication, async (req: any, res) => {
+  try {
+    const email = req.email;
+    await ConnectDB();
+    await Users.findOneAndDelete({ email: email });
+    res.status(411).json({
+      res: "ok",
+      msg: "Profile Deleted Successfully",
+    });
+  } catch (error) {
+    res.status(411).json({
+      res: "Error",
+      msg: "Invalid Input Types",
+      error: error,
+    });
+  }
+});
+
 export default userRoute;
