@@ -111,6 +111,10 @@ const sellerSchema = new mongoose_1.Schema({
     confirmpassword: {
         type: String,
     },
+    darkmode: {
+        type: Boolean,
+        required: false,
+    },
 });
 const Seller = mongoose_1.models.sellers || (0, mongoose_1.model)("sellers", sellerSchema);
 exports.default = Seller;

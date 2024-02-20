@@ -69,6 +69,7 @@ sellerRoute.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, func
                 res.status(411).json({
                     res: "Error",
                     msg: "Something went wrong",
+                    error: error,
                 });
             }
         }
@@ -134,6 +135,7 @@ sellerRoute.get("/", authentication_1.sellerAuthentication, (req, res) => __awai
         res.status(411).json({
             res: "Error",
             msg: "Error fetching seller details",
+            error: error
         });
     }
 }));
@@ -143,17 +145,17 @@ sellerRoute.patch("/update", authentication_1.sellerAuthentication, (req, res) =
         const email = req.email;
         try {
             yield (0, database_1.ConnectDB)();
-            console.log(email);
-            const newUpdate = yield sellers_1.default.findOneAndUpdate({ "business.email": email }, update);
+            yield sellers_1.default.findOneAndUpdate({ "business.email": email }, update);
+            const updatedUser = yield sellers_1.default.findOne({ "business.email": email });
             res.status(200).json({
                 res: "ok",
-                update: newUpdate,
+                update: updatedUser,
             });
         }
         catch (error) {
             res.status(411).json({
                 res: "Error",
-                msg: "Invalid Input Types",
+                msg: "Error While Updating Seller Profile",
             });
         }
     }
@@ -175,7 +177,7 @@ sellerRoute.delete("/delete", authentication_1.sellerAuthentication, (req, res) 
         const email = req.email;
         yield (0, database_1.ConnectDB)();
         yield sellers_1.default.findOneAndDelete({ "business.email": email });
-        res.status(411).json({
+        res.status(200).json({
             res: "ok",
             msg: "Profile Deleted Successfully",
         });

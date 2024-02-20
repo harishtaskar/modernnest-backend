@@ -68,6 +68,7 @@ userRoute.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, functi
             res.status(411).json({
                 res: "ERROR",
                 msg: "Error Adding New User",
+                error: error,
             });
         }
     }
@@ -98,6 +99,7 @@ userRoute.get("/signin", (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(411).json({
             res: "Error",
             msg: "Something went wrong, Please check input",
+            error: error,
         });
     }
 }));
@@ -125,6 +127,58 @@ userRoute.get("/", authentication_1.userAuthentication, (req, res) => __awaiter(
         res.status(411).json({
             res: "Error",
             msg: "Error fetching user details",
+            error: error,
+        });
+    }
+}));
+userRoute.patch("/update", authentication_1.userAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const update = req.body.update;
+        const email = req.email;
+        try {
+            yield (0, database_1.ConnectDB)();
+            const newUpdate = yield users_1.default.findOneAndUpdate({ email: email }, update);
+            res.status(200).json({
+                res: "ok",
+                update: newUpdate,
+            });
+        }
+        catch (error) {
+            res.status(411).json({
+                res: "Error",
+                msg: "Error While Updating User Profile",
+                error: error,
+            });
+        }
+    }
+    catch (error) {
+        res.status(411).json({
+            res: "Error",
+            msg: "Invalid Input Types",
+            type: {
+                update: {
+                    field: "value",
+                },
+            },
+            error: error,
+        });
+    }
+}));
+userRoute.delete("/delete", authentication_1.userAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const email = req.email;
+        yield (0, database_1.ConnectDB)();
+        yield users_1.default.findOneAndDelete({ email: email });
+        res.status(411).json({
+            res: "ok",
+            msg: "Profile Deleted Successfully",
+        });
+    }
+    catch (error) {
+        res.status(411).json({
+            res: "Error",
+            msg: "Invalid Input Types",
+            error: error,
         });
     }
 }));

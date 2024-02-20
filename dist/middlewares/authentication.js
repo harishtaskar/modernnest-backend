@@ -35,6 +35,7 @@ const userAuthentication = (req, res, next) => {
             res.status(411).json({
                 res: "Error",
                 msg: "Error varifying auth token" + token,
+                error: error,
             });
         }
     }
@@ -53,7 +54,6 @@ const sellerAuthentication = (req, res, next) => {
         try {
             if (token) {
                 const verify = jsonwebtoken_1.default.verify(token, config_1.jwtpassword);
-                console.log(verify);
                 if (verify.status === "seller") {
                     req.email = verify.email;
                     next();
@@ -76,6 +76,7 @@ const sellerAuthentication = (req, res, next) => {
             res.status(411).json({
                 res: "Error",
                 msg: "Error varifying auth token" + token,
+                error: error
             });
         }
     }
@@ -83,6 +84,7 @@ const sellerAuthentication = (req, res, next) => {
         res.status(411).json({
             res: "Error",
             msg: "Invalid Auth Token" + error,
+            error: error
         });
     }
 };

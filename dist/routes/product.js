@@ -35,4 +35,98 @@ productRoute.post("/add", authentication_1.sellerAuthentication, (req, res) => _
         });
     }
 }));
+productRoute.patch("/update", authentication_1.sellerAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const update = req.body.update;
+        const id = req.query.id;
+        try {
+            yield (0, database_1.ConnectDB)();
+            const newUpdate = yield product_1.default.findOneAndUpdate({ _id: id }, update);
+            res.status(200).json({
+                res: "ok",
+                update: newUpdate,
+            });
+        }
+        catch (error) {
+            res.status(411).json({
+                res: "Error",
+                msg: "Error While Updating Product",
+            });
+        }
+    }
+    catch (error) {
+        res.status(411).json({
+            res: "Error",
+            msg: "Invalid Input Types",
+            type: {
+                update: {
+                    field: "value",
+                },
+            },
+            error: error,
+        });
+    }
+}));
+productRoute.delete("/delete", authentication_1.sellerAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.query.id;
+        yield (0, database_1.ConnectDB)();
+        yield product_1.default.findByIdAndDelete(id);
+        res.status(411).json({
+            res: "ok",
+            msg: "Product Deleted Successfully",
+        });
+    }
+    catch (error) {
+        res.status(411).json({
+            res: "Error",
+            msg: "Invalid Input Types",
+            error: error,
+        });
+    }
+}));
+productRoute.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.query.id;
+        yield (0, database_1.ConnectDB)();
+        const product = yield product_1.default.findById(id);
+        res.status(200).json({
+            res: "ok",
+            msg: "Product Fetch Successfully",
+            product: product,
+        });
+    }
+    catch (error) {
+        res.status(411).json({
+            res: "ERROR",
+            msg: "Invalid Input Type",
+            error: error
+        });
+    }
+}));
+productRoute.get("/:filter", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const filter = req.query.filter || "";
+        yield (0, database_1.ConnectDB)();
+        const products = yield product_1.default.find({
+            $or: [
+                { brand: { $regex: filter } },
+                { description: { $regex: filter } },
+                { name: { $regex: filter } },
+            ],
+        });
+        res.status(200).json({
+            res: "ok",
+            msg: "All Products Fetch Successfully",
+            products: products,
+        });
+    }
+    catch (error) {
+        res.status(411).json({
+            res: "ERROR",
+            msg: "Something went wrong",
+            error: error
+        });
+    }
+}));
 exports.default = productRoute;

@@ -86,6 +86,7 @@ productRoute.get("/:id", async (req, res) => {
     res.status(411).json({
       res: "ERROR",
       msg: "Invalid Input Type",
+      error: error
     });
   }
 });
@@ -110,6 +111,7 @@ productRoute.get("/:filter", async (req, res) => {
     res.status(411).json({
       res: "ERROR",
       msg: "Something went wrong",
+      error: error
     });
   }
 });

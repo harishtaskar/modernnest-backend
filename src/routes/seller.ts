@@ -56,6 +56,7 @@ sellerRoute.post("/signup", async (req, res) => {
         res.status(411).json({
           res: "Error",
           msg: "Something went wrong",
+          error: error,
         });
       }
     }
@@ -118,6 +119,7 @@ sellerRoute.get("/", sellerAuthentication, async (req: any, res) => {
     res.status(411).json({
       res: "Error",
       msg: "Error fetching seller details",
+      error: error
     });
   }
 });
@@ -128,14 +130,13 @@ sellerRoute.patch("/update", sellerAuthentication, async (req: any, res) => {
     const email = req.email;
     try {
       await ConnectDB();
-      console.log(email);
-      const newUpdate = await Seller.findOneAndUpdate(
-        { "business.email": email },
-        update
-      );
+      await Seller.findOneAndUpdate({ "business.email": email }, update);
+
+      const updatedUser = await Seller.findOne({ "business.email": email });
+
       res.status(200).json({
         res: "ok",
-        update: newUpdate,
+        update: updatedUser,
       });
     } catch (error) {
       res.status(411).json({
@@ -162,7 +163,7 @@ sellerRoute.delete("/delete", sellerAuthentication, async (req: any, res) => {
     const email = req.email;
     await ConnectDB();
     await Seller.findOneAndDelete({ "business.email": email });
-    res.status(411).json({
+    res.status(200).json({
       res: "ok",
       msg: "Profile Deleted Successfully",
     });

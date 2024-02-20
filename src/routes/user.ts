@@ -56,6 +56,7 @@ userRoute.post("/signin", async (req, res) => {
       res.status(411).json({
         res: "ERROR",
         msg: "Error Adding New User",
+        error: error,
       });
     }
   }
@@ -88,6 +89,7 @@ userRoute.get("/signin", async (req, res) => {
     res.status(411).json({
       res: "Error",
       msg: "Something went wrong, Please check input",
+      error: error,
     });
   }
 });
@@ -114,6 +116,7 @@ userRoute.get("/", userAuthentication, async (req: any, res) => {
     res.status(411).json({
       res: "Error",
       msg: "Error fetching user details",
+      error: error,
     });
   }
 });
@@ -124,7 +127,6 @@ userRoute.patch("/update", userAuthentication, async (req: any, res) => {
     const email = req.email;
     try {
       await ConnectDB();
-      console.log(email);
       const newUpdate = await Users.findOneAndUpdate({ email: email }, update);
       res.status(200).json({
         res: "ok",
@@ -134,6 +136,7 @@ userRoute.patch("/update", userAuthentication, async (req: any, res) => {
       res.status(411).json({
         res: "Error",
         msg: "Error While Updating User Profile",
+        error: error,
       });
     }
   } catch (error) {

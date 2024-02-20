@@ -110,6 +110,10 @@ const sellerSchema = new Schema({
   confirmpassword: {
     type: String,
   },
+  darkmode: {
+    type: Boolean,
+    required: false,
+  },
 });
 
 const Seller = models.sellers || model("sellers", sellerSchema);
