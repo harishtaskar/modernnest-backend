@@ -1,1 +1,1 @@
-export const jwtpassword = process.env.JWT_PASSWORD || "";
+export const jwtpassword = process.env.JWT_PASSWORD || "modernnest";

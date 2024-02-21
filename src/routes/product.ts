@@ -14,6 +14,7 @@ productRoute.post("/add", sellerAuthentication, async (req, res) => {
     res.status(200).json({
       res: "ok",
       msg: "Product Added Successfully",
+      poduct: newProduct,
     });
   } catch (error) {
     res.status(411).json({
@@ -56,10 +57,10 @@ productRoute.patch("/update", sellerAuthentication, async (req, res) => {
 
 productRoute.delete("/delete", sellerAuthentication, async (req, res) => {
   try {
-    const id = req.query.id;
+    const id = req.headers.id;
     await ConnectDB();
     await Products.findByIdAndDelete(id);
-    res.status(411).json({
+    res.status(200).json({
       res: "ok",
       msg: "Product Deleted Successfully",
     });
@@ -86,20 +87,20 @@ productRoute.get("/:id", async (req, res) => {
     res.status(411).json({
       res: "ERROR",
       msg: "Invalid Input Type",
-      error: error
+      error: error,
     });
   }
 });
 
-productRoute.get("/:filter", async (req, res) => {
+productRoute.get("/", async (req, res) => {
   try {
     const filter = req.query.filter || "";
     await ConnectDB();
     const products = await Products.find({
       $or: [
-        { brand: { $regex: filter } },
-        { description: { $regex: filter } },
-        { name: { $regex: filter } },
+        { brand: { $regex: filter, $options: "i" } },
+        { description: { $regex: filter, $options: "i" } },
+        { name: { $regex: filter, $options: "i" } },
       ],
     });
     res.status(200).json({
@@ -111,7 +112,7 @@ productRoute.get("/:filter", async (req, res) => {
     res.status(411).json({
       res: "ERROR",
       msg: "Something went wrong",
-      error: error
+      error: error,
     });
   }
 });

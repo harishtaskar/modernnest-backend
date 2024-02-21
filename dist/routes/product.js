@@ -26,6 +26,7 @@ productRoute.post("/add", authentication_1.sellerAuthentication, (req, res) => _
         res.status(200).json({
             res: "ok",
             msg: "Product Added Successfully",
+            poduct: newProduct,
         });
     }
     catch (error) {
@@ -69,10 +70,10 @@ productRoute.patch("/update", authentication_1.sellerAuthentication, (req, res) 
 }));
 productRoute.delete("/delete", authentication_1.sellerAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.query.id;
+        const id = req.headers.id;
         yield (0, database_1.ConnectDB)();
         yield product_1.default.findByIdAndDelete(id);
-        res.status(411).json({
+        res.status(200).json({
             res: "ok",
             msg: "Product Deleted Successfully",
         });
@@ -100,19 +101,19 @@ productRoute.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(411).json({
             res: "ERROR",
             msg: "Invalid Input Type",
-            error: error
+            error: error,
         });
     }
 }));
-productRoute.get("/:filter", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+productRoute.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const filter = req.query.filter || "";
         yield (0, database_1.ConnectDB)();
         const products = yield product_1.default.find({
             $or: [
-                { brand: { $regex: filter } },
-                { description: { $regex: filter } },
-                { name: { $regex: filter } },
+                { brand: { $regex: filter, $options: "i" } },
+                { description: { $regex: filter, $options: "i" } },
+                { name: { $regex: filter, $options: "i" } },
             ],
         });
         res.status(200).json({
@@ -125,7 +126,7 @@ productRoute.get("/:filter", (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(411).json({
             res: "ERROR",
             msg: "Something went wrong",
-            error: error
+            error: error,
         });
     }
 }));
