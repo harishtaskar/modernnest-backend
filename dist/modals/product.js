@@ -81,8 +81,12 @@ const productSchema = new mongoose_1.Schema({
         required: [true, "string is required"],
     },
     discount: {
-        type: String,
+        type: Number,
         required: false,
+    },
+    seller: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "sellers",
     },
 });
 const Products = mongoose_1.models.products || (0, mongoose_1.model)("products", productSchema);

@@ -20,8 +20,9 @@ const productRoute = (0, express_1.Router)();
 productRoute.post("/add", authentication_1.sellerAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const product = req.body.product;
+        const id = req.headers._id;
         yield (0, database_1.ConnectDB)();
-        const newProduct = new product_1.default(product);
+        const newProduct = new product_1.default(Object.assign(Object.assign({}, product), { seller: id }));
         yield newProduct.save();
         res.status(200).json({
             res: "ok",
@@ -39,7 +40,7 @@ productRoute.post("/add", authentication_1.sellerAuthentication, (req, res) => _
 productRoute.patch("/update", authentication_1.sellerAuthentication, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const update = req.body.update;
-        const id = req.query.id;
+        const id = req.headers.prod_id;
         try {
             yield (0, database_1.ConnectDB)();
             const newUpdate = yield product_1.default.findOneAndUpdate({ _id: id }, update);
@@ -72,7 +73,7 @@ productRoute.delete("/delete", authentication_1.sellerAuthentication, (req, res)
     try {
         const id = req.headers.id;
         yield (0, database_1.ConnectDB)();
-        yield product_1.default.findByIdAndDelete(id);
+        // await Products.findByIdAndDelete(id);
         res.status(200).json({
             res: "ok",
             msg: "Product Deleted Successfully",
@@ -88,9 +89,10 @@ productRoute.delete("/delete", authentication_1.sellerAuthentication, (req, res)
 }));
 productRoute.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.query.id;
+        const id = req.params.id;
         yield (0, database_1.ConnectDB)();
         const product = yield product_1.default.findById(id);
+        console.log(id);
         res.status(200).json({
             res: "ok",
             msg: "Product Fetch Successfully",
@@ -108,8 +110,10 @@ productRoute.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
 productRoute.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const filter = req.query.filter || "";
+        const id = req.headers._id;
         yield (0, database_1.ConnectDB)();
         const products = yield product_1.default.find({
+            seller: id,
             $or: [
                 { brand: { $regex: filter, $options: "i" } },
                 { description: { $regex: filter, $options: "i" } },

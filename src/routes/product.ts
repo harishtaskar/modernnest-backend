@@ -8,8 +8,9 @@ const productRoute = Router();
 productRoute.post("/add", sellerAuthentication, async (req, res) => {
   try {
     const product = req.body.product;
+    const id = req.headers._id;
     await ConnectDB();
-    const newProduct = new Products(product);
+    const newProduct = new Products({ ...product, seller: id });
     await newProduct.save();
     res.status(200).json({
       res: "ok",
@@ -27,7 +28,7 @@ productRoute.post("/add", sellerAuthentication, async (req, res) => {
 productRoute.patch("/update", sellerAuthentication, async (req, res) => {
   try {
     const update = req.body.update;
-    const id = req.query.id;
+    const id = req.headers.prod_id;
     try {
       await ConnectDB();
       const newUpdate = await Products.findOneAndUpdate({ _id: id }, update);
@@ -59,7 +60,7 @@ productRoute.delete("/delete", sellerAuthentication, async (req, res) => {
   try {
     const id = req.headers.id;
     await ConnectDB();
-    await Products.findByIdAndDelete(id);
+    // await Products.findByIdAndDelete(id);
     res.status(200).json({
       res: "ok",
       msg: "Product Deleted Successfully",
@@ -75,9 +76,11 @@ productRoute.delete("/delete", sellerAuthentication, async (req, res) => {
 
 productRoute.get("/:id", async (req, res) => {
   try {
-    const id = req.query.id;
+    const id = req.params.id;
     await ConnectDB();
     const product = await Products.findById(id);
+    console.log(id);
+
     res.status(200).json({
       res: "ok",
       msg: "Product Fetch Successfully",
@@ -95,8 +98,10 @@ productRoute.get("/:id", async (req, res) => {
 productRoute.get("/", async (req, res) => {
   try {
     const filter = req.query.filter || "";
+    const id = req.headers._id;
     await ConnectDB();
     const products = await Products.find({
+      seller: id,
       $or: [
         { brand: { $regex: filter, $options: "i" } },
         { description: { $regex: filter, $options: "i" } },

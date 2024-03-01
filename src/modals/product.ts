@@ -80,8 +80,12 @@ const productSchema = new Schema({
     required: [true, "string is required"],
   },
   discount: {
-    type: String,
+    type: Number,
     required: false,
+  },
+  seller: {
+    type: Schema.Types.ObjectId,
+    ref: "sellers",
   },
 });
 
