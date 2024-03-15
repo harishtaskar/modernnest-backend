@@ -50,7 +50,7 @@ sellerRoute.post("/signup", async (req, res) => {
         await newSeller.save();
         res.status(200).json({
           res: "ok",
-          msg: " 🔥 New Seller Registered Successfully",
+          msg: "Registered Successfully",
         });
       } catch (error) {
         res.status(411).json({
@@ -79,7 +79,7 @@ sellerRoute.get("/signin", async (req, res) => {
       const token = jwt.sign({ email: email, status: "seller" }, jwtpassword);
       res.status(200).json({
         res: "ok",
-        msg: " 🚀 Login Successfull",
+        msg: "Login Successfull",
         token: `Bearer ${token}`,
         user: user,
       });
@@ -119,7 +119,7 @@ sellerRoute.get("/", sellerAuthentication, async (req: any, res) => {
     res.status(411).json({
       res: "Error",
       msg: "Error fetching seller details",
-      error: error
+      error: error,
     });
   }
 });

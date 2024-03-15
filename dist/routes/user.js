@@ -40,7 +40,7 @@ const userExistsMobile = (input) => __awaiter(void 0, void 0, void 0, function* 
     return userExists;
 });
 // Register new user
-userRoute.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+userRoute.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.body.user;
     if (yield userExistsEmail(user.email)) {
         res.status(411).json({
@@ -61,7 +61,7 @@ userRoute.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, functi
             newUser.save();
             res.status(200).json({
                 res: "ok",
-                msg: " 🔥 User Registered Successfully",
+                msg: "User Registered Successfully",
             });
         }
         catch (error) {
@@ -84,7 +84,7 @@ userRoute.get("/signin", (req, res) => __awaiter(void 0, void 0, void 0, functio
             const token = jsonwebtoken_1.default.sign({ email: user.email, status: "user" }, config_1.jwtpassword);
             res.status(200).json({
                 res: "ok",
-                msg: " 🚀 Login Successfull",
+                msg: "Login Successfull",
                 token: `Bearer ${token}`,
             });
         }
@@ -141,6 +141,7 @@ userRoute.patch("/update", authentication_1.userAuthentication, (req, res) => __
             res.status(200).json({
                 res: "ok",
                 update: newUpdate,
+                msg: "Profile Updated Successfully",
             });
         }
         catch (error) {

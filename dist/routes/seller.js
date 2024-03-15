@@ -62,7 +62,7 @@ sellerRoute.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, func
                 yield newSeller.save();
                 res.status(200).json({
                     res: "ok",
-                    msg: " 🔥 New Seller Registered Successfully",
+                    msg: "Registered Successfully",
                 });
             }
             catch (error) {
@@ -92,7 +92,7 @@ sellerRoute.get("/signin", (req, res) => __awaiter(void 0, void 0, void 0, funct
             const token = jsonwebtoken_1.default.sign({ email: email, status: "seller" }, config_1.jwtpassword);
             res.status(200).json({
                 res: "ok",
-                msg: " 🚀 Login Successfull",
+                msg: "Login Successfull",
                 token: `Bearer ${token}`,
                 user: user,
             });
@@ -135,7 +135,7 @@ sellerRoute.get("/", authentication_1.sellerAuthentication, (req, res) => __awai
         res.status(411).json({
             res: "Error",
             msg: "Error fetching seller details",
-            error: error
+            error: error,
         });
     }
 }));

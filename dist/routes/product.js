@@ -73,7 +73,7 @@ productRoute.delete("/delete", authentication_1.sellerAuthentication, (req, res)
     try {
         const id = req.headers.id;
         yield (0, database_1.ConnectDB)();
-        // await Products.findByIdAndDelete(id);
+        yield product_1.default.findByIdAndDelete(id);
         res.status(200).json({
             res: "ok",
             msg: "Product Deleted Successfully",
@@ -110,10 +110,10 @@ productRoute.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
 productRoute.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const filter = req.query.filter || "";
-        const id = req.headers._id;
+        // const id = req.headers._id;
         yield (0, database_1.ConnectDB)();
         const products = yield product_1.default.find({
-            seller: id,
+            // seller: id,
             $or: [
                 { brand: { $regex: filter, $options: "i" } },
                 { description: { $regex: filter, $options: "i" } },

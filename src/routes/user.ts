@@ -30,7 +30,7 @@ const userExistsMobile = async (input: string) => {
 };
 
 // Register new user
-userRoute.post("/signin", async (req, res) => {
+userRoute.post("/signup", async (req, res) => {
   const user = req.body.user;
 
   if (await userExistsEmail(user.email)) {
@@ -50,7 +50,7 @@ userRoute.post("/signin", async (req, res) => {
       newUser.save();
       res.status(200).json({
         res: "ok",
-        msg: " 🔥 User Registered Successfully",
+        msg: "User Registered Successfully",
       });
     } catch (error) {
       res.status(411).json({
@@ -76,7 +76,7 @@ userRoute.get("/signin", async (req, res) => {
       );
       res.status(200).json({
         res: "ok",
-        msg: " 🚀 Login Successfull",
+        msg: "Login Successfull",
         token: `Bearer ${token}`,
       });
     } else {
@@ -131,6 +131,7 @@ userRoute.patch("/update", userAuthentication, async (req: any, res) => {
       res.status(200).json({
         res: "ok",
         update: newUpdate,
+        msg: "Profile Updated Successfully",
       });
     } catch (error) {
       res.status(411).json({

@@ -60,7 +60,7 @@ productRoute.delete("/delete", sellerAuthentication, async (req, res) => {
   try {
     const id = req.headers.id;
     await ConnectDB();
-    // await Products.findByIdAndDelete(id);
+    await Products.findByIdAndDelete(id);
     res.status(200).json({
       res: "ok",
       msg: "Product Deleted Successfully",
@@ -98,10 +98,10 @@ productRoute.get("/:id", async (req, res) => {
 productRoute.get("/", async (req, res) => {
   try {
     const filter = req.query.filter || "";
-    const id = req.headers._id;
+    // const id = req.headers._id;
     await ConnectDB();
     const products = await Products.find({
-      seller: id,
+      // seller: id,
       $or: [
         { brand: { $regex: filter, $options: "i" } },
         { description: { $regex: filter, $options: "i" } },
